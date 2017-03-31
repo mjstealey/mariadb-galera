@@ -1,6 +1,8 @@
 FROM centos:7
 MAINTAINER Michael J. Stealey <michael.j.stealey@gmail.com>
 
+RUN groupadd -r mysql && useradd -r -g mysql mysql
+
 ENV LANGUAGE="en_US.UTF-8"
 ENV LANG="en_US.UTF-8"
 ENV LC_ALL="en_US.UTF-8"
@@ -45,12 +47,10 @@ RUN yum install -y \
     socat \
     jemalloc
 
-ADD ./server.cnf /etc/my.cnf.d/server.cnf
 ADD ./docker-entrypoint.sh /docker-entrypoint.sh
 
-EXPOSE 3306 4567
-# clean up
-#RUN yum -y remove wget dpkg
+VOLUME ["var/lib/mysql"]
 
+EXPOSE 3306 4567
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["galera"]
+CMD ["mysqld"]
