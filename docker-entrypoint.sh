@@ -25,8 +25,8 @@ _mysql_secure_installation() {
     > /.msi_response
     echo "" >> /.msi_response
     echo "y" >> /.msi_response
-    echo "${PASSWORD}" >> /.msi_response
-    echo "${PASSWORD}" >> /.msi_response
+    echo "${MYSQL_PASSWORD}" >> /.msi_response
+    echo "${MYSQL_PASSWORD}" >> /.msi_response
     echo "y" >> /.msi_response
     echo "y" >> /.msi_response
     echo "y" >> /.msi_response
@@ -37,6 +37,11 @@ _mysql_secure_installation() {
 if [[ ${1} = 'mysqld' ]]; then
     gosu root /etc/init.d/mysql start
     _mysql_secure_installation
+    if [[ ${2} = '--init' ]]; then
+        # mysql --user=user_name --password=your_password db_name
+        gosu root mysql --user=root --password=${MYSQL_PASSWORD} < /init/initialize.sql
+        gosu root mysqldump --user=root --password=${MYSQL_PASSWORD} --all-databases > /init/db.sql
+    fi
     gosu root /etc/init.d/mysql stop
     _server_cnf
     cat /etc/my.cnf.d/server.cnf
