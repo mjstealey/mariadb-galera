@@ -30,11 +30,11 @@ Create local network
 $ docker network create --subnet=172.18.0.0/16 galeranet
 ```
 
-Running the galera containers
+Running the galera containers - assumes repository was checked out at `/home/$USER/mariadb-galera`
 
 ```
 $ docker run -d --name galera1 -h galera1 \
-	-v /home/docker/mariadb-galera/init:/init \
+	-v /home/$USER/mariadb-galera/init:/init \
 	-e MYSQL_ROOT_PASSWORD=password \
 	--env-file=env/galera1.env \
 	--net galeranet \
