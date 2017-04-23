@@ -1,12 +1,15 @@
 FROM centos:7
 MAINTAINER Michael J. Stealey <michael.j.stealey@gmail.com>
 
-RUN groupadd -r mysql && useradd -r -g mysql mysql
+# Explicitly set user/group IDs for mysql account
+RUN groupadd -r mysql --gid=997 \
+    && useradd -r -g mysql -d /var/lib/mysql --uid=997 mysql
 
 ENV LANGUAGE="en_US.UTF-8"
 ENV LANG="en_US.UTF-8"
 ENV LC_ALL="en_US.UTF-8"
 
+# install gosu
 ENV GOSU_VERSION 1.10
 RUN set -x \
     && yum -y install epel-release \
@@ -21,6 +24,7 @@ RUN set -x \
     && chmod +x /usr/bin/gosu \
     && gosu nobody true
 
+# install prerequisites for MariaDB
 RUN yum install -y \
     rsync \
     nmap \
@@ -38,6 +42,7 @@ RUN yum install -y \
     openssl \
     which
 
+# install MariaDB 10.1.x
 ADD ./MariaDB.repo /etc/yum.repos.d/MariaDB.repo
 RUN yum install -y \
     MariaDB-server \
@@ -47,6 +52,7 @@ RUN yum install -y \
     socat \
     jemalloc
 
+# add docker-entrypoint script
 ADD ./docker-entrypoint.sh /docker-entrypoint.sh
 
 VOLUME ["var/lib/mysql"]

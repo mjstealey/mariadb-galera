@@ -1,4 +1,4 @@
-# MariaDB 10.1 CentOS repository list - created 2017-03-30 19:16 UTC
+# MariaDB 10.1 CentOS repository list - created 2017-04-23 13:24 UTC
 # http://downloads.mariadb.org/mariadb/repositories/
 [mariadb]
 name = MariaDB
