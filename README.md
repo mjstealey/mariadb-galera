@@ -17,7 +17,8 @@ docker pull mjstealey/mariadb-galera:latest
 ### Build locally
 
 ```
-$ cd 10.1/
+$ git clone https://github.com/mjstealey/mariadb-galera.git
+$ cd mariadb-galera/10.1/
 $ docker build -t mariadb-galera .
 ```
 
