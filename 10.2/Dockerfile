@@ -57,6 +57,11 @@ ADD ./docker-entrypoint.sh /docker-entrypoint.sh
 
 VOLUME ["var/lib/mysql"]
 
-EXPOSE 3306 4567
+# 3306: MariaDB client connections
+# 4444: State snapshot transfer
+# 4567: Galera Cluster
+# 4568: Incremental state transfer
+EXPOSE 3306 4444 4567 4568
 ENTRYPOINT ["/docker-entrypoint.sh"]
+
 CMD ["mysqld"]
