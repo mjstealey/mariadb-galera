@@ -3,8 +3,9 @@
 REPO_DIR=$(pwd)
 
 # create docker network if it does not exist
+GALERANET=$(docker network inspect galeranet)
 echo "### create docker network galeranet if it does not exist ###"
-if [[ -n $(docker network inspect galeranet | grep Error) ]]; then
+if [[ "${GALERANET}" = '[]' ]]; then
     docker network create --subnet=172.18.0.0/16 galeranet
 fi
 
@@ -28,6 +29,7 @@ docker run -d --name galera-node-1 -h galera-node-1 \
     --ip 172.18.0.2 \
     --add-host galera-node-2:172.18.0.3 \
     --add-host galera-node-3:172.18.0.4 \
+    -p 3306 -p 4444 -p 4567 -p 4568 \
     mjstealey/mariadb-galera:10.1 -vif initialize.sql mysqld
 
 for pc in $(seq 15 -1 1); do
@@ -49,6 +51,7 @@ docker run -d --name galera-node-2 -h galera-node-2 \
     --ip 172.18.0.3 \
     --add-host galera-node-1:172.18.0.2 \
     --add-host galera-node-3:172.18.0.4 \
+    -p 3306 -p 4444 -p 4567 -p 4568 \
     mjstealey/mariadb-galera:10.1 -vj mysqld
 
 for pc in $(seq 15 -1 1); do
@@ -70,6 +73,7 @@ docker run -d --name galera-node-3 -h galera-node-3 \
     --ip 172.18.0.4 \
     --add-host galera-node-1:172.18.0.2 \
     --add-host galera-node-2:172.18.0.3 \
+    -p 3306 -p 4444 -p 4567 -p 4568 \
     mjstealey/mariadb-galera:10.1 -vj mysqld
 
 for pc in $(seq 15 -1 1); do
